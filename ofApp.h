@@ -1,9 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxLeapC.h"
-
-#include "ProjectConstants.h"
+#include "spaceFactory.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,14 +21,5 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-		void onLeapFrame(Leap::Frame frame);
-
-		ofxLeapC::Device	m_device;
-		Leap::Frame			m_frame;
 		
-
-		//we are going to now track our palm position through a member varible we can use again in the draw function
-		ofVec3f					m_palmPos;
-		ofImage					m_ship;			//an image to represent our ship
 };
