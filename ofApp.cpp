@@ -4,7 +4,7 @@
 void ofApp::setup(){
 
 	spaceObject *asteroids;
-	spaceFactory::GetInstance()->createObject(objectTypes::Asteroid);
+	spaceFactory::createObject(objectTypes::Asteroid);
 
 }
 
