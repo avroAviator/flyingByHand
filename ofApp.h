@@ -1,5 +1,7 @@
 #pragma once
 
+//May want to look here: https://developer.leapmotion.com/documentation/v4/group___structs.html#struct_l_e_a_p___h_a_n_d 
+
 #include "ofMain.h"
 #include "ofxLeapC.h"
 
@@ -12,25 +14,16 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-
 		void onLeapFrame(Leap::Frame frame);
 
-		ofxLeapC::Device	m_device;
-		Leap::Frame			m_frame;
-		
+		ofxLeapC::Device		m_device;
+		Leap::Frame				m_frame;
 
-		//we are going to now track our palm position through a member varible we can use again in the draw function
 		ofVec3f					m_palmPos;
-		ofImage					m_ship;			//an image to represent our ship
+		ofVec3f					m_palmRot;
+		float					m_pinchStrength;
+		float					m_grabStrength;
+		ofImage					m_ship;
+
+		ofFloatColor			m_bgCol;
 };
