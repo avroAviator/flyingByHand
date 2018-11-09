@@ -145,6 +145,7 @@ void ofApp::update(){
         //updating objects drawn  (stars and asteroids)
         for (int i = 0; i < objects.size(); i++) {
             objects[i]->update();
+		detectCollision(objects[i], ship, i);
         }
         
         /*
@@ -204,4 +205,21 @@ void ofApp::draw(){
 	}
 
 
+}
+
+void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
+    if ((obj->m_position.x - ship.m_position.x) <= ship.collisionRad || (obj->m_position.y - ship.m_position.z) <= ship.collisionRad) {
+        if (obj->type == objectTypes::Star) {
+            if (m_pinchStrength > 0.8f) {
+                objects[i] = NULL;
+                delete objects[i];
+                objects.erase(objects.begin() + i);
+                m_score++;
+
+            }
+        }
+        else if (obj->type == objectTypes::Asteroid) {
+            m_gameState = "end";
+        }
+    }
 }
