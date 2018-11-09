@@ -9,5 +9,6 @@ public:
 	~Star();
 
 	void setup();
+    objectTypes spaceObject::type = objectTypes::Star;
 };
 

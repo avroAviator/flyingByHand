@@ -10,7 +10,7 @@ Star::~Star()
 }
 
 void Star::setup(){
-	m_image.load("images/Star.png");
+	m_image.load(ProjectConstants::IMG_PATH_STAR);
 	m_image.resize(70,70);
 	m_image.setAnchorPoint(m_image.getWidth(), m_image.getHeight());
 
