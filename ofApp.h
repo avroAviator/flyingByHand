@@ -3,6 +3,12 @@
 #include "ofMain.h"
 #include "ofxLeapC.h"
 
+#include "spaceObject.h"
+#include "Asteroid.h"
+#include "Star.h"
+#include "spaceFactory.h"
+#include <vector>
+
 #include "ProjectConstants.h"
 
 class ofApp : public ofBaseApp{
@@ -30,5 +36,11 @@ class ofApp : public ofBaseApp{
 		
 		string m_gameState;
 		float m_score;
+	
+		std::vector<spaceObject*> objects;
+		bool initialDraw;
+		int numDrawn;
+		int numAsteroids = 15;
+		int numStars = 10;
 
 };
