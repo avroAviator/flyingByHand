@@ -19,6 +19,7 @@ class ofApp : public ofBaseApp{
 		void draw();
 
 		void onLeapFrame(Leap::Frame frame);
+		void detectCollision(spaceObject* obj, spaceship ship, int i);
 
 		ofxLeapC::Device	m_device;
 		Leap::Frame			m_frame;
@@ -31,6 +32,7 @@ class ofApp : public ofBaseApp{
 		ofImage					m_start;		//an image to represent the 'start' screen
 
 
+		spaceship ship;
 		float m_pinchStrength;
 		float m_grabStrength;
 		
