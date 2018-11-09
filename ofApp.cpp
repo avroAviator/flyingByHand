@@ -1,7 +1,10 @@
 #include "ofApp.h"
+#include "spaceObject.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofBackground(0);
+	
 	//setting up the LeapMotion add-on
 	m_device.connectEventHandler(&ofApp::onLeapFrame, this);
 
@@ -13,6 +16,20 @@ void ofApp::setup(){
 	ofSetRectMode(OF_RECTMODE_CENTER);								//set rect to center for better control
 
 	m_ship.rotate90(3);
+
+	for (int i = 0; i < numAsteroids; i++) {
+		objects.push_back(spaceFactory::createObject(objectTypes::Asteroid));
+	}
+	for (int i = 0; i < numStars; i++) {
+		objects.push_back(spaceFactory::createObject(objectTypes::Star));
+	}
+
+	for (int i = 0; i < objects.size(); i++) {
+		objects[i]->setup();
+	}
+
+	initialDraw = true;
+	numDrawn = 0;
 
 	m_gameState = "start";
 }
@@ -118,6 +135,10 @@ void ofApp::update(){
 			cout << "ofPalmPos: " << ofToString(ofPalmPos) << endl;																				//output palm position in terminal: x, y, z
 			cout << "ofPalmRot: " << ofToString(m_palmRot) << endl;
 			cout << "pinchStrength: " << ofToString(m_pinchStrength) << ", grabStrength: " << ofToString(m_grabStrength) << endl;
+			
+			for (int i = 0; i < objects.size(); i++) {
+				objects[i]->update();
+			}
 
 
 			break;																																//only want one hand position so take the first detected as default
@@ -137,6 +158,16 @@ void ofApp::draw(){
 		ofPopMatrix();
 	}
 	else if (m_gameState == "game") {
+		
+		//if (numDrawn < objects.size()) {
+
+		//}
+		//else {
+			for (int i = 0; i < objects.size(); i++) {
+				objects[i]->draw();
+			}
+		//}
+		
 		//now draw ship moving relative to where we are detecting our hand
 		ofPushMatrix();
 			ofTranslate(m_palmPos.x, m_palmPos.z);
