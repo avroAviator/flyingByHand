@@ -1,6 +1,5 @@
 #include "ofApp.h"
 #include "spaceObject.h"
-#include <vector>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
