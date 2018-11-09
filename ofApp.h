@@ -1,11 +1,12 @@
 #pragma once
 
-//May want to look here: https://developer.leapmotion.com/documentation/v4/group___structs.html#struct_l_e_a_p___h_a_n_d 
-
 #include "ofMain.h"
-#include "ofxLeapC.h"
+#include "spaceObject.h"
+#include "Asteroid.h"
+#include "Star.h"
+#include "spaceFactory.h"
 
-#include "ProjectConstants.h"
+#include <vector>
 
 class ofApp : public ofBaseApp{
 
@@ -14,16 +15,22 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 
-		void onLeapFrame(Leap::Frame frame);
+		std::vector<spaceObject*> objects;
+		bool initialDraw;
+		int numDrawn;
+		int numAsteroids = 15;
+		int numStars = 10;
 
-		ofxLeapC::Device		m_device;
-		Leap::Frame				m_frame;
-
-		ofVec3f					m_palmPos;
-		ofVec3f					m_palmRot;
-		float					m_pinchStrength;
-		float					m_grabStrength;
-		ofImage					m_ship;
-
-		ofFloatColor			m_bgCol;
+		void keyPressed(int key);
+		void keyReleased(int key);
+		void mouseMoved(int x, int y );
+		void mouseDragged(int x, int y, int button);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);
+		void mouseEntered(int x, int y);
+		void mouseExited(int x, int y);
+		void windowResized(int w, int h);
+		void dragEvent(ofDragInfo dragInfo);
+		void gotMessage(ofMessage msg);
+		
 };
