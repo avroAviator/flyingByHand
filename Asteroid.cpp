@@ -8,7 +8,7 @@ Asteroid::~Asteroid(){
 
 void Asteroid::setup() {
 
-	m_image.load("Asteroid.png");
+	m_image.load("images/Asteroid.png");
 	m_image.resize(30,60);
 	m_image.setAnchorPoint(m_image.getWidth(), m_image.getHeight());
 

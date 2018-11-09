@@ -3,19 +3,18 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	ofBackground(0);
 	
 	//setting up the LeapMotion add-on
 	m_device.connectEventHandler(&ofApp::onLeapFrame, this);
 
-	m_ship.load(ProjectConstants::IMG_PATH_SHIP);					//load our image
+	m_ship.load("images/spaceship.png");					//load our image
 	m_start.load("images/start.png");
 
 
 	ofSetFrameRate(ProjectConstants::PROJ_DESIRED_FRAMERATE);		//cap framerate
 	ofSetRectMode(OF_RECTMODE_CENTER);								//set rect to center for better control
 
-	m_ship.rotate90(3);
+	m_ship.rotate90(-1);
 
 	for (int i = 0; i < numAsteroids; i++) {
 		objects.push_back(spaceFactory::createObject(objectTypes::Asteroid));
@@ -31,7 +30,7 @@ void ofApp::setup(){
 	initialDraw = true;
 	numDrawn = 0;
 
-	m_gameState = "start";
+	m_gameState = "game";
 }
 
 //--------------------------------------------------------------
@@ -136,13 +135,14 @@ void ofApp::update(){
 			cout << "ofPalmRot: " << ofToString(m_palmRot) << endl;
 			cout << "pinchStrength: " << ofToString(m_pinchStrength) << ", grabStrength: " << ofToString(m_grabStrength) << endl;
 			
-			for (int i = 0; i < objects.size(); i++) {
-				objects[i]->update();
-			}
-
 
 			break;																																//only want one hand position so take the first detected as default
 		}
+
+        for (int i = 0; i < objects.size(); i++) {
+            objects[i]->update();
+        }
+
 	}
 	else if (m_gameState == "end") {
 
@@ -158,16 +158,7 @@ void ofApp::draw(){
 		ofPopMatrix();
 	}
 	else if (m_gameState == "game") {
-		
-		//if (numDrawn < objects.size()) {
 
-		//}
-		//else {
-			for (int i = 0; i < objects.size(); i++) {
-				objects[i]->draw();
-			}
-		//}
-		
 		//now draw ship moving relative to where we are detecting our hand
 		ofPushMatrix();
 			ofTranslate(m_palmPos.x, m_palmPos.z);
@@ -175,6 +166,16 @@ void ofApp::draw(){
 			ofScale(m_pinchStrength + 0.5f, m_pinchStrength + 0.5f, m_pinchStrength + 0.5f);
 			m_ship.draw(0.0f, 0.0f, 100.0f, 200.0f);
 		ofPopMatrix();
+
+        //if (numDrawn < objects.size()) {
+
+        //}
+        //else {
+        for (int i = 0; i < objects.size(); i++) {
+            objects[i]->draw();
+        }
+        //}
+
 	}
 	else if (m_gameState == "end") {
 
