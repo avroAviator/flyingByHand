@@ -35,7 +35,11 @@ class ofApp : public ofBaseApp{
 		float m_grabStrength;
 		
 		string m_gameState;
-		float m_score;
+		int m_score;
+
+        float m_screenTime;
+
+        ofTrueTypeFont m_font;
 	
 		std::vector<spaceObject*> objects;
 		bool initialDraw;

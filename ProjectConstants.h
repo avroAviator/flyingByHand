@@ -16,5 +16,9 @@ namespace ProjectConstants
 	static const float		PROJ_DESIRED_FRAMERATE = 60.0f;
 
 	//asset consts
-	static const string		IMG_PATH_SHIP = "images/ship.png";
+	static const string		IMG_PATH_SHIP = "images/spaceship.png";
+    static const string     IMG_PATH_START = "images/start.png";
+    static const string     IMG_PATH_STAR = "images/Star.png";
+    static const string     IMG_PATH_ASTEROID = "images/asteroid.png";
+    static const string     FONT_PATH_CONSOLAS = "fonts/CONSOLA.ttf";
 };
