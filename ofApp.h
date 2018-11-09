@@ -28,7 +28,6 @@ class ofApp : public ofBaseApp{
 		//we are going to now track our palm position through a member varible we can use again in the draw function
 		ofVec3f					m_palmPos;
 		ofVec3f					m_palmRot;
-		ofImage					m_ship;			//an image to represent our ship
 		ofImage					m_start;		//an image to represent the 'start' screen
 
 

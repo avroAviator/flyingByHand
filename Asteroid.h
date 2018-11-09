@@ -8,7 +8,7 @@ public:
 	~Asteroid();
 
 	void setup();
-    objectTypes spaceObject::type = objectTypes::Asteroid;
+    debris type = debris::Asteroid;
 
 };
 

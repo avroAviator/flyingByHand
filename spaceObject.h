@@ -2,10 +2,9 @@
 
 #include "ofMain.h"
 #include "spaceship.h"
-#include "spaceFactory.h"
 #include "ProjectConstants.h"
 
-
+enum class debris { Asteroid, Star, Planet };
 class spaceObject
 {
 public:
@@ -14,7 +13,7 @@ public:
 
 	ofVec2f m_position;
 	ofImage m_image;
-    objectTypes type;
+    debris type;
 
 	virtual void setup();
 	void update();

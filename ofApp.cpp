@@ -8,17 +8,12 @@ void ofApp::setup(){
 
 	//setting up the LeapMotion add-on
 	m_device.connectEventHandler(&ofApp::onLeapFrame, this);
-
-	m_ship.load(ProjectConstants::IMG_PATH_SHIP);					//load our image
 	m_start.load(ProjectConstants::IMG_PATH_START);
 
- 
+    ship.setup();
 
 	ofSetFrameRate(ProjectConstants::PROJ_DESIRED_FRAMERATE);		//cap framerate
 	ofSetRectMode(OF_RECTMODE_CENTER);								//set rect to center for better control
-
-    m_ship.resize(100.0f, 50.0f);
-	m_ship.rotate90(-1);                                            //rotate ship for proper orientation (facing upwards) on startup
 
     m_score = 0;                                                    //starting score (default)
 
@@ -118,6 +113,8 @@ void ofApp::update(){
 			m_palmPos.x = ofClamp(m_palmPos.x, -(float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f, (float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f);
 			m_palmPos.z = ofClamp(m_palmPos.z, -(float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f, (float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f);
 
+            ship.m_position.x = m_palmPos.x;
+            ship.m_position.z = m_palmPos.z;
 
 			//get rotation from Leap data. Note that angles come in radians so we must convert.
 			m_palmRot = ofVec3f(
@@ -158,7 +155,7 @@ void ofApp::update(){
 
 	}
 	else if (m_gameState == "end") {
-
+        std::exit(0);
 	}
 	
 }
@@ -187,7 +184,7 @@ void ofApp::draw(){
 			ofTranslate(m_palmPos.x, m_palmPos.z);
 			ofRotateZ(m_palmRot.y);
 			ofScale(m_pinchStrength + 1.3f, m_pinchStrength + 1.3f, m_pinchStrength + 1.3f);
-			m_ship.draw(0.0f, 0.0f);
+			ship.m_ship.draw(0.0f, 0.0f);
 		ofPopMatrix();
 
        
@@ -209,7 +206,9 @@ void ofApp::draw(){
 
 void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
     if ((obj->m_position.x - ship.m_position.x) <= ship.collisionRad || (obj->m_position.y - ship.m_position.z) <= ship.collisionRad) {
-        if (obj->type == objectTypes::Star) {
+        cout << "Collsion happened" << endl;
+
+        if (obj->type == debris::Star) {
             if (m_pinchStrength > 0.8f) {
                 objects[i] = NULL;
                 delete objects[i];
@@ -218,7 +217,7 @@ void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
 
             }
         }
-        else if (obj->type == objectTypes::Asteroid) {
+        else if (obj->type == debris::Asteroid) {
             m_gameState = "end";
         }
     }
