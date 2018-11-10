@@ -9,6 +9,6 @@ public:
 	~Star();
 
 	void setup();
-    debris type = debris::Star;
+    
 };
 

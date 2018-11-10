@@ -8,7 +8,5 @@ public:
 	~Asteroid();
 
 	void setup();
-    debris type = debris::Asteroid;
-
 };
 

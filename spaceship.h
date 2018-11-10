@@ -9,9 +9,9 @@ public:
     ~spaceship();
 
      ofVec3f m_position;
-     float collisionRad = 20.0f;
-     float shipWidth = 100.0f;
-     float shipHeight = 200.0f;
+	 float shipWidth = 50.0f;
+	 float shipHeight = 100.0f;
+     float collisionRad = (shipWidth/2);
      ofImage m_ship;
 
      void setPosition(int x, int z);

@@ -29,8 +29,8 @@ void ofApp::setup(){
 	for (int i = 0; i < numStars; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Star)); }
 	for (int i = 0; i < objects.size(); i++) { objects[i]->setup(); }
 
-	initialDraw = true;
-	numDrawn = 0;
+	//initialDraw = true;
+	//numDrawn = 0;
        
     //set default gamestart to the desired screen (start)
 	m_gameState = "start";
@@ -234,10 +234,10 @@ void ofApp::draw(){
 }
 
 void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
-    if ((obj->m_position.x - ship.m_position.x) <= ship.collisionRad || (obj->m_position.y - ship.m_position.z) <= ship.collisionRad) {
+    if (sqrt(pow((obj->m_position.x - ship.m_position.x),2) + pow((obj->m_position.y - ship.m_position.z),2) )<= ship.collisionRad) {
         cout << "Collsion happened" << endl;
 
-        if (obj->type == debris::Star) {
+        if (obj->m_objID == "Star") {
             if (m_pinchStrength > 0.8f) {
                 objects[i] = NULL;
                 delete objects[i];
@@ -246,7 +246,7 @@ void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
 
             }
         }
-        else if (obj->type == debris::Asteroid) {
+        else if (obj->m_objID == "Asteroid") {
             m_gameState = "end";
         }
     }

@@ -16,4 +16,6 @@ void Star::setup(){
 
 	m_position.x = rand() % ofGetWindowWidth();
 	m_position.y = rand() % ofGetWindowHeight();
+
+	m_objID = "Star";
 }
