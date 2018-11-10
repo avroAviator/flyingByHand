@@ -13,11 +13,13 @@ void ofApp::setup(){
 	//import starting screen image for instructions
 	m_start.load(ProjectConstants::IMG_PATH_START);
 
+	ofSetRectMode(OF_RECTMODE_CENTER);
+
 	//setup ship class
     ship.setup();
 
 	ofSetFrameRate(ProjectConstants::PROJ_DESIRED_FRAMERATE);		//cap framerate
-	ofSetRectMode(OF_RECTMODE_CENTER);								//set rect to center for better control
+	
 
     m_score = 0;                                                    //starting score (default)
 
@@ -25,8 +27,8 @@ void ofApp::setup(){
     m_font.loadFont(ProjectConstants::FONT_PATH_CONSOLAS, 30);
 
     //create our asteroids and stars using a factory
-	for (int i = 0; i < numAsteroids; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Asteroid)); }
-	for (int i = 0; i < numStars; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Star)); }
+	//for (int i = 0; i < numAsteroids; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Asteroid)); }
+	for (int i = 0; i < 1; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Star)); }
 	for (int i = 0; i < objects.size(); i++) { objects[i]->setup(); }
 
 	//initialDraw = true;
@@ -103,13 +105,12 @@ void ofApp::update(){
 			m_palmPos.x = ofPalmPos.x * 7.0f;
 			m_palmPos.z = ofPalmPos.z * 5.0f;
 
-
 			//now we need to set limits to screen so ship can't disappear
 			m_palmPos.x = ofClamp(m_palmPos.x, -(float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f, (float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f);
 			m_palmPos.z = ofClamp(m_palmPos.z, -(float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f, (float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f);
 
-            ship.m_position.x = m_palmPos.x;
-            ship.m_position.z = m_palmPos.z;
+			ship.m_position.x = m_palmPos.x;
+			ship.m_position.z = m_palmPos.z;
 
 			//get rotation from Leap data. Note that angles come in radians so we must convert.
 			m_palmRot = ofVec3f(
@@ -125,11 +126,12 @@ void ofApp::update(){
 			//note how up and down is the Y-axis on Leap and in and out of screen is z-axis!! ... transposing from a 3D space to a 2D screen
 			m_palmPos += ofVec3f((float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f, 0.0f, (float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f);
 
-			cout << "ofPalmPos: " << ofToString(ofPalmPos) << endl;																				//output palm position in terminal: x, y, z
-			cout << "ofPalmRot: " << ofToString(m_palmRot) << endl;
-			cout << "pinchStrength: " << ofToString(m_pinchStrength) << endl;
+			//cout << "ofPalmPos: " << ofToString(ofPalmPos) << endl;																				//output palm position in terminal: x, y, z
+			//cout << "ofPalmRot: " << ofToString(m_palmRot) << endl;
+			//cout << "pinchStrength: " << ofToString(m_pinchStrength) << endl;
+			//cout << "ship position: " << ship.m_position << endl;
 			
-            cout << "time visible: " << ofToString(m_screenTime) << endl;
+            //cout << "time visible: " << ofToString(m_screenTime) << endl;
 
 			break;																																//only want one hand position so take the first detected as default
 		}
@@ -140,18 +142,20 @@ void ofApp::update(){
 			detectCollision(objects[i], ship, i);
         }
 		
-		//this is the score counter for time 'survived' on screen
+		//this is the score counter for time 'survived' on screen ( in secs )
 		int totalTime = m_screenTime;
+		bool prevFrame = false;
 
-		if (totalTime % 60 == 5) {
-			bool prevFrame = false;
+		if (totalTime % 60 == 1) {
+			
 			if (!prevFrame) {
 				m_score++;
 				prevFrame = true;
-			} 
-
+			}
 		}
-
+		else {
+			prevFrame = false;
+		}
 	}
 	else if (m_gameState == "end") {
 		//update device manually
@@ -234,8 +238,13 @@ void ofApp::draw(){
 }
 
 void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
+
+	cout << "ship position: " << ship.m_position << endl;
+	cout << "object position: " << obj->m_position << endl;
+
     if (sqrt(pow((obj->m_position.x - ship.m_position.x),2) + pow((obj->m_position.y - ship.m_position.z),2) )<= ship.collisionRad) {
         cout << "Collsion happened" << endl;
+
 
         if (obj->m_objID == "Star") {
             if (m_pinchStrength > 0.8f) {
