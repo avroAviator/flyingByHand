@@ -8,7 +8,7 @@ spaceFactory* spaceFactory::m_spaceFactory = 0;
 
 spaceFactory::spaceFactory() {}
 
-spaceObject* spaceFactory::createObject(objectTypes type)
+spaceObject* spaceFactory::m_createObject(objectTypes type)
 {
 	switch (type)
 	{

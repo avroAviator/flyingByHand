@@ -35,6 +35,8 @@ class ofApp : public ofBaseApp{
 		float m_pinchStrength;
 		float m_grabStrength;
 		
+		bool m_prevFrame;
+
 		string m_gameState;
 		int m_score;
 

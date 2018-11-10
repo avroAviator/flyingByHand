@@ -17,6 +17,6 @@ public:
 	virtual void setup();
 	void update();
 	void draw();
-	ofVec2f getPos();
+	ofVec2f m_getPos();
 };
 

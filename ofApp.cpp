@@ -2,10 +2,10 @@
 #include "spaceObject.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
-	
+void ofApp::setup() {
+
 	//default background to black
-    ofBackground(0);
+	ofBackground(0);
 
 	//setting up the LeapMotion add-on
 	m_device.connectEventHandler(&ofApp::onLeapFrame, this);
@@ -16,36 +16,34 @@ void ofApp::setup(){
 	ofSetRectMode(OF_RECTMODE_CENTER);
 
 	//setup ship class
-    ship.setup();
+	ship.setup();
 
 	ofSetFrameRate(ProjectConstants::PROJ_DESIRED_FRAMERATE);		//cap framerate
-	
 
-    m_score = 0;                                                    //starting score (default)
+	m_prevFrame = false;
+
+	m_score = 0;                                                    //starting score (default)
 
 	//loading the font for drawing strings
-    m_font.loadFont(ProjectConstants::FONT_PATH_CONSOLAS, 30);
+	m_font.loadFont(ProjectConstants::FONT_PATH_CONSOLAS, 30);
 
-    //create our asteroids and stars using a factory
-	//for (int i = 0; i < numAsteroids; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Asteroid)); }
-	for (int i = 0; i < 1; i++) { objects.push_back(spaceFactory::createObject(objectTypes::Star)); }
+	//create our asteroids and stars using a factory
+	for (int i = 0; i < numAsteroids; i++) { objects.push_back(spaceFactory::m_createObject(objectTypes::Asteroid)); }
+	for (int i = 0; i < numStars; i++) { objects.push_back(spaceFactory::m_createObject(objectTypes::Star)); }
 	for (int i = 0; i < objects.size(); i++) { objects[i]->setup(); }
 
-	//initialDraw = true;
-	//numDrawn = 0;
-       
-    //set default gamestart to the desired screen (start)
+	//set default gamestart to the desired screen (start)
 	m_gameState = "start";
 }
 
 //--------------------------------------------------------------
 //get frame data everytime device is updated
-void ofApp::onLeapFrame(Leap::Frame frame){
+void ofApp::onLeapFrame(Leap::Frame frame) {
 	m_frame = frame;
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update() {
 	if (m_gameState == "start") {
 		//update device manually
 		m_device.update();
@@ -75,11 +73,11 @@ void ofApp::update(){
 			cout << "ofPalmPos: " << ofToString(ofPalmPos) << endl;																				//output palm position in terminal: x, y, z
 			cout << "grabStrength: " << ofToString(m_grabStrength) << endl;
 
-            if (m_grabStrength > 0.8f) {
-                m_gameState = "game";
-            }
+			if (m_grabStrength > 0.8f) {
+				m_gameState = "game";
+			}
 
-            //only want one hand position so take the first detected as default
+			//only want one hand position so take the first detected as default
 			break;
 		}
 	}
@@ -98,8 +96,8 @@ void ofApp::update(){
 			const Leap::Vector palmPos = hand.palmPosition();							//get the Leap palm position
 			const ofVec3f ofPalmPos = ofxLeapC::toVec3(hand.palmPosition());			//convert palmPos LeapVec to a ofVec3f we can more easily work with
 
-            //monitor screentime of tracked hand in seconds
-            m_screenTime = hand.timeVisible();
+			//monitor screentime of tracked hand in seconds
+			m_screenTime = hand.timeVisible();
 
 			//scale values of the palm position to keep it on screen
 			m_palmPos.x = ofPalmPos.x * 7.0f;
@@ -126,35 +124,29 @@ void ofApp::update(){
 			//note how up and down is the Y-axis on Leap and in and out of screen is z-axis!! ... transposing from a 3D space to a 2D screen
 			m_palmPos += ofVec3f((float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f, 0.0f, (float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f);
 
-			//cout << "ofPalmPos: " << ofToString(ofPalmPos) << endl;																				//output palm position in terminal: x, y, z
-			//cout << "ofPalmRot: " << ofToString(m_palmRot) << endl;
-			//cout << "pinchStrength: " << ofToString(m_pinchStrength) << endl;
-			//cout << "ship position: " << ship.m_position << endl;
-			
-            //cout << "time visible: " << ofToString(m_screenTime) << endl;
+			cout << "time visible: " << ofToString(m_screenTime) << endl;
 
 			break;																																//only want one hand position so take the first detected as default
 		}
 
-        //updating objects drawn  (stars and asteroids)
-        for (int i = 0; i < objects.size(); i++) {
-            objects[i]->update();
+		//updating objects drawn  (stars and asteroids)
+		for (int i = 0; i < objects.size(); i++) {
+			objects[i]->update();
 			detectCollision(objects[i], ship, i);
-        }
-		
+		}
+
 		//this is the score counter for time 'survived' on screen ( in secs )
 		int totalTime = m_screenTime;
-		bool prevFrame = false;
 
-		if (totalTime % 60 == 1) {
-			
-			if (!prevFrame) {
+		if (totalTime % 5 == 0) {
+
+			if (!m_prevFrame) {
 				m_score++;
-				prevFrame = true;
+				m_prevFrame = true;
 			}
 		}
 		else {
-			prevFrame = false;
+			m_prevFrame = false;
 		}
 	}
 	else if (m_gameState == "end") {
@@ -171,14 +163,13 @@ void ofApp::update(){
 			const Leap::Vector palmPos = hand.palmPosition();							//get the Leap palm position
 			const ofVec3f ofPalmPos = ofxLeapC::toVec3(hand.palmPosition());			//convert palmPos LeapVec to a ofVec3f we can more easily work with
 
-
 			//scale values of the palm position to keep it on screen
 			m_palmPos.x = ofPalmPos.x * 7.0f;
 			m_palmPos.z = ofPalmPos.z * 5.0f;
-	
+
 			//get value of pinch strength (number between 0.0f and 1.0f)
 			m_pinchStrength = hand.pinchStrength();
-			
+
 			//now change coordinates to middle of screen
 			//note how up and down is the Y-axis on Leap and in and out of screen is z-axis!! ... transposing from a 3D space to a 2D screen
 			m_palmPos += ofVec3f((float)ProjectConstants::PROJ_WINDOW_RES_X / 2.0f, 0.0f, (float)ProjectConstants::PROJ_WINDOW_RES_Y / 2.0f);
@@ -192,25 +183,23 @@ void ofApp::update(){
 			break;
 		}
 	}
-	
+
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
 	if (m_gameState == "start") {
-        //draw start screen at center of window
+		//draw start screen at center of window
 		ofPushMatrix();
-			m_start.draw(640.0f, 360.0f);
+		m_start.draw(640.0f, 360.0f);
 		ofPopMatrix();
-	} else if (m_gameState == "game") {
+	}
+	else if (m_gameState == "game") {
 
 		ofPushMatrix();
 			ofTranslate((ProjectConstants::PROJ_WINDOW_RES_X / 2), (ProjectConstants::PROJ_WINDOW_RES_Y / 2));
-			for (int i = 0; i < objects.size(); i++) {
-				objects[i]->draw();
-			}
+			for (int i = 0; i < objects.size(); i++) { objects[i]->draw(); }
 		ofPopMatrix();
-
 
 		//now draw ship moving relative to where we are detecting our hand
 		ofPushMatrix();
@@ -220,42 +209,38 @@ void ofApp::draw(){
 			ship.m_ship.draw(0.0f, 0.0f);
 		ofPopMatrix();
 
-        //drawing scoreboard
-        ofPushMatrix();
-            ofTranslate(ofGetWidth() / 2.0f, ofGetHeight() / 2.0f);
-            ofScale(1.0f, 1.0f);
-            m_font.drawString("Score: " + ofToString(m_score), -630, 350);
-        ofPopMatrix();
-	} else if (m_gameState == "end") {
+		//drawing scoreboard
+		ofPushMatrix();
+			ofTranslate(ofGetWidth() / 2.0f, ofGetHeight() / 2.0f);
+			ofScale(1.0f, 1.0f);
+			m_font.drawString("Score: " + ofToString(m_score), -630, 350);
+		ofPopMatrix();
+	}
+	else if (m_gameState == "end") {
 		//drawing closing screen with final score
 		ofPushMatrix();
 			ofTranslate(ofGetWidth() / 2.0f, ofGetHeight() / 2.0f);
 			ofScale(1.0f, 1.0f);
-			m_font.drawString("Game over!\nYour score was: " + ofToString(m_score) + "\nUse Pinch Gesture to exit game.",-300, 0);
+			m_font.drawString("Game over!\nYour score was: " + ofToString(m_score) + "\nUse Pinch Gesture to exit game.", -300, 0);
 		ofPopMatrix();
 	}
 }
 
 void ofApp::detectCollision(spaceObject* obj, spaceship ship, int i) {
 
-	cout << "ship position: " << ship.m_position << endl;
-	cout << "object position: " << obj->m_position << endl;
+	if (sqrt(pow((obj->m_position.x - ship.m_position.x), 2) + pow((obj->m_position.y - ship.m_position.z), 2)) <= ship.m_collisionRad) {
+		cout << "Collsion happened" << endl;
 
-    if (sqrt(pow((obj->m_position.x - ship.m_position.x),2) + pow((obj->m_position.y - ship.m_position.z),2) )<= ship.collisionRad) {
-        cout << "Collsion happened" << endl;
-
-
-        if (obj->m_objID == "Star") {
-            if (m_pinchStrength > 0.8f) {
-                objects[i] = NULL;
-                delete objects[i];
-                objects.erase(objects.begin() + i);
-                m_score++;
-
-            }
-        }
-        else if (obj->m_objID == "Asteroid") {
-            m_gameState = "end";
-        }
-    }
+		if (obj->m_objID == "Star") {
+			if (m_pinchStrength > 0.8f) {
+				objects[i] = NULL;
+				delete objects[i];
+				objects.erase(objects.begin() + i);
+				m_score++;
+			}
+		}
+		else if (obj->m_objID == "Asteroid") {
+			m_gameState = "end";
+		}
+	}
 }

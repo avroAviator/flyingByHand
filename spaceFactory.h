@@ -8,7 +8,7 @@ class spaceFactory
 {
 public:
 
-	static spaceObject* createObject(objectTypes type);
+	static spaceObject* m_createObject(objectTypes type);
 
 private:
 	spaceFactory();
