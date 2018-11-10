@@ -204,14 +204,13 @@ void ofApp::draw(){
 		ofPopMatrix();
 	} else if (m_gameState == "game") {
 
-        //if (numDrawn < objects.size()) {
+		ofPushMatrix();
+			ofTranslate((ProjectConstants::PROJ_WINDOW_RES_X / 2), (ProjectConstants::PROJ_WINDOW_RES_Y / 2));
+			for (int i = 0; i < objects.size(); i++) {
+				objects[i]->draw();
+			}
+		ofPopMatrix();
 
-        //}
-        //else {
-        for (int i = 0; i < objects.size(); i++) {
-            objects[i]->draw();
-        }
-        //}
 
 		//now draw ship moving relative to where we are detecting our hand
 		ofPushMatrix();
